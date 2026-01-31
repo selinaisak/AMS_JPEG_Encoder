@@ -8,23 +8,29 @@ def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
 
-
-###### GENERAL STEPS OF A JPEG ENCODER ######
-if __name__ == '__main__':
-    #print_hi('JPEG')
+def get_images():
+    images = []
     for filename in SRC_IMAGE_DIR.iterdir():
         # skip iteration if it is not a 'regular' file
         if not filename.is_file():
             continue
         # else treat as image
         try:
-            print(filename)
-            image = Image.open(filename)
-            print(f"opened image {image.filename}")
-            
+            # check if image --> only then append to list
+            with Image.open(filename) as image:
+                image.verify()
+                print(f"opened image {image.filename}")
+                images.append(image)
+
         # print error if not image or other problem
         except (UnidentifiedImageError, FileNotFoundError) as e:
             print(e)
+    return images
+
+###### GENERAL STEPS OF A JPEG ENCODER ######
+if __name__ == '__main__':
+    images = get_images()
+
 
     # Color space conversion RGB --> YCbCr
     # Chroma subsampling (4:2:0)
