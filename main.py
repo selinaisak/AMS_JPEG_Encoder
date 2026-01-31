@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from pathlib import Path
 # This is a basic JPEG encoder
 
@@ -13,7 +13,18 @@ def print_hi(name):
 if __name__ == '__main__':
     #print_hi('JPEG')
     for filename in SRC_IMAGE_DIR.iterdir():
-        print_hi(filename)
+        # skip iteration if it is not a 'regular' file
+        if not filename.is_file():
+            continue
+        # else treat as image
+        try:
+            print(filename)
+            image = Image.open(filename)
+            print(f"opened image {image.filename}")
+            
+        # print error if not image or other problem
+        except (UnidentifiedImageError, FileNotFoundError) as e:
+            print(e)
 
     # Color space conversion RGB --> YCbCr
     # Chroma subsampling (4:2:0)
