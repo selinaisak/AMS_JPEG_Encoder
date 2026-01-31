@@ -1,4 +1,8 @@
+from PIL import Image
+from pathlib import Path
 # This is a basic JPEG encoder
+
+SRC_IMAGE_DIR = Path('./pre_jpeg')
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -7,7 +11,10 @@ def print_hi(name):
 
 ###### GENERAL STEPS OF A JPEG ENCODER ######
 if __name__ == '__main__':
-    print_hi('JPEG')
+    #print_hi('JPEG')
+    for filename in SRC_IMAGE_DIR.iterdir():
+        print_hi(filename)
+
     # Color space conversion RGB --> YCbCr
     # Chroma subsampling (4:2:0)
     # Block preparation/splitting (8x8)
