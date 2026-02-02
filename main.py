@@ -33,6 +33,9 @@ def get_images():
             print(e)
     return images
 
+def save_image(image: Image.Image, path: Path):
+    image.save(path)
+
 
 ###### GENERAL STEPS OF A JPEG ENCODER ######
 if __name__ == '__main__':
@@ -59,8 +62,8 @@ if __name__ == '__main__':
         # Frame builder --> construct/display JPEG encoded image!
 
         # Save image to output directory --> add appropriate extension (.jpeg)
-        # --> also reuse original file name (manipulation via Path)
-        out_image = (OUT_IMAGE_DIR / Path(image.filename).name).with_suffix(".jpg")
-        converted.save(out_image)
+        # --> also reuse original file name (get it via Path)
+        out_path = (OUT_IMAGE_DIR / Path(image.filename).name).with_suffix(".jpg")
+        save_image(converted, out_path)
 
     # See PyCharm help at https://www.jetbrains.com/help/pycharm/

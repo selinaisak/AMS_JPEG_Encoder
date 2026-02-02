@@ -1,6 +1,7 @@
 from PIL import Image
 
 
+# Use this class to mainly convert from RGB --> YCbCr
 class ColorSpaceConverter:
     def __init__(self, color_from, color_to):
         self.color_from = color_from
