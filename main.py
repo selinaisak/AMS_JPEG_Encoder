@@ -1,6 +1,7 @@
 from PIL import Image, UnidentifiedImageError
 from pathlib import Path
 
+from ChromaSubsampler import ChromaSubsampler
 from ColorSpaceConverter import ColorSpaceConverter
 
 # This is a basic JPEG encoder
@@ -51,6 +52,7 @@ if __name__ == '__main__':
         print(converted.mode)
 
         # Chroma subsampling (4:2:0)
+        ChromaSubsampler(converted,4,4,4)
         # Block preparation/splitting (8x8)
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
         # Direct Cosine Transform (DCT)
