@@ -48,6 +48,7 @@ if __name__ == '__main__':
 
         # Chroma subsampling (4:2:0)
         subsampler = ChromaSubsampler(converted,4,2,0)
+        subsampler.subsample()
 
         # Block preparation/splitting (8x8)
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
