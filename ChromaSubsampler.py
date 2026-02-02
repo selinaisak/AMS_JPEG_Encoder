@@ -27,6 +27,12 @@ class ChromaSubsampler:
         print(f"Y: {Y.shape}, Cb: {Cb.shape}, Cr: {Cr.shape}")
 
 
+    # Subsampling of an individual channel --> might be skipped if not necessary!
+    def __subsample_channel(self, channel: numpy.ndarray, factor: int):
+        # If the chroma factor is the same as the luma factor --> no subsampling!
+        if(factor == self.Y):
+            return channel
+
     # Use this 'private' method for converting color channels to arrays
     # --> easier to use/manipulate further
     def __convert_channels_to_arrays(self):
