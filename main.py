@@ -9,31 +9,27 @@ from ColorSpaceConverter import ColorSpaceConverter
 SRC_IMAGE_DIR = Path('./pre_jpeg')
 OUT_IMAGE_DIR = Path('./post_jpeg')
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
-
-
+# Fetch all images for JPEG encoding
 def get_images():
     images = []
     for filename in SRC_IMAGE_DIR.iterdir():
-        # skip iteration if it is not a 'regular' file
+        # Skip iteration if it is not a 'regular' file
         if not filename.is_file():
             continue
-        # else treat as image
+        # Else treat as image
         try:
-            # check if image --> only then append to list
+            # Check if image --> only then append to list
             with Image.open(filename) as image:
                 image.verify()
                 print(f"opened image {image.filename}")
                 images.append(Image.open(filename) )
 
-        # print error if not image or other problem
+        # Print error if not image or other problem
         except (UnidentifiedImageError, FileNotFoundError) as e:
             print(e)
     return images
 
+# Save the resulting image at path
 def save_image(image: Image.Image, path: Path):
     image.save(path)
 
@@ -42,18 +38,17 @@ def save_image(image: Image.Image, path: Path):
 if __name__ == '__main__':
     # Fetch all images
     images = get_images()
-    # Color space conversion RGB --> YCbCr
-    converter = ColorSpaceConverter('RGB', 'YCbCr')
 
     for image in images:
         # Color space conversion RGB --> YCbCr
+        converter = ColorSpaceConverter('RGB', 'YCbCr')
         converted = converter.convert(image)
         # Check whether color space conversion worked
         print(converted.mode)
 
         # Chroma subsampling (4:2:0)
-        ChromaSubsampler(converted,4,2,0)
-        
+        subsampler = ChromaSubsampler(converted,4,2,0)
+
         # Block preparation/splitting (8x8)
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
         # Direct Cosine Transform (DCT)
