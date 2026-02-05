@@ -49,8 +49,8 @@ if __name__ == '__main__':
         )
         back_converter = ColorSpaceConverter('YCbCr', 'RGB')
         img = back_converter.convert(img)
-        img.save(INTER_IMAGE_DIR / f"subsampled_{Path(image.filename).name}")
-        save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, INTER_IMAGE_DIR / f"sampled_{Path(image.filename).name}")
+        img.save(INTER_IMAGE_DIR / "subsampling" / f"subsampled_{Path(image.filename).name}")
+        save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, INTER_IMAGE_DIR /  "subsampling" / f"sampled_{Path(image.filename).name}")
 
 
         # Block preparation/splitting (8x8)
@@ -60,22 +60,22 @@ if __name__ == '__main__':
         print(Y_blocks.shape)
         print(Cb_blocks.shape)
         print(Cr_blocks.shape)
-        show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / f"blocked_Y_{Path(image.filename).name}", "Y Blocks", 0, 255)
-        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / f"blocked_Cb_{Path(image.filename).name}", "Cb Blocks", 0, 255)
-        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / f"blocked_Cr_{Path(image.filename).name}", "Cr Blocks", 0, 255)
+        show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / "blocking" / f"Y_{Path(image.filename).name}", "Y Blocks", 0, 255)
+        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / "blocking" / f"Cb_{Path(image.filename).name}", "Cb Blocks", 0, 255)
+        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / "blocking" / f"Cr_{Path(image.filename).name}", "Cr Blocks", 0, 255)
 
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
         shifter = LevelShifter(128)
         Y_blocks, Cb_blocks, Cr_blocks = shifter.shift(Y_blocks, Cb_blocks, Cr_blocks)
-        show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / f"sh_blocked_Y_{Path(image.filename).name}", "Y Blocks Shifted", -128, 127)
-        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / f"sh_blocked_Cb_{Path(image.filename).name}", "Cb Blocks Shifted", -128, 127 )
-        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / f"sh_blocked_Cr_{Path(image.filename).name}", "Cr Blocks Shifted", -128, 127 )
+        show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / "shifting" / f"Y_{Path(image.filename).name}", "Y Blocks Shifted", -128, 127)
+        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / "shifting" / f"Cb_{Path(image.filename).name}", "Cb Blocks Shifted", -128, 127 )
+        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / "shifting" / f"Cr_{Path(image.filename).name}", "Cr Blocks Shifted", -128, 127 )
 
         # Discrete Cosine Transform (DCT)
         Y_blocks, Cb_blocks, Cr_blocks = DCT_2D(Y_blocks, Cb_blocks, Cr_blocks)
-        show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / f"dct_blocked_Y_{Path(image.filename).name}", "Y Blocks after DCT")
-        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / f"dct_blocked_Cb_{Path(image.filename).name}", "Cb Blocks after DCT")
-        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / f"dct_blocked_Cr_{Path(image.filename).name}", "Cr Blocks after DCT")
+        show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / "dct" / f"Y_{Path(image.filename).name}", "Y Blocks after DCT")
+        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / "dct" / f"Cb_{Path(image.filename).name}", "Cb Blocks after DCT")
+        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / "dct" / f"Cr_{Path(image.filename).name}", "Cr Blocks after DCT")
 
         # Quantization (quantization table/matrix!)
         # Zigzag scan/ordering

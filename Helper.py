@@ -83,4 +83,4 @@ def show_blocks(blocks, output_file, title, min=None, max=None):
     plt.tight_layout()
     plt.savefig(output_file)
     plt.close()
-    print(f"Saved blocking preview to '{output_file}'")
+    print(f"Saved preview to '{output_file}'")
