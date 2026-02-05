@@ -1,6 +1,9 @@
+import sys
+
 from PIL import Image, UnidentifiedImageError
 from pathlib import Path
 import matplotlib.pyplot as plt
+import numpy as np
 
 from ChromaSubsampler import ChromaSubsampler
 from ColorSpaceConverter import ColorSpaceConverter
@@ -90,9 +93,9 @@ if __name__ == '__main__':
 
         # Test subsampling effect via upsampling
         Y_up, Cb_up, Cr_up = subsampler.upsample(Y, Cb, Cr)
-        print("Y :", Y_up.shape)
-        print("Cb:", Cb_up.shape)
-        print("Cr:", Cr_up.shape)
+        #print("Y :", Y_up.shape)
+        #print("Cb:", Cb_up.shape)
+        #print("Cr:", Cr_up.shape)
         img = Image.merge(
             "YCbCr",
             (
@@ -104,16 +107,16 @@ if __name__ == '__main__':
         back_converter = ColorSpaceConverter('YCbCr', 'RGB')
         img = back_converter.convert(img)
         img.save(INTER_IMAGE_DIR / f"subsampled_{Path(image.filename).name}")
-        save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, INTER_IMAGE_DIR / f"sampled_{Path(image.filename).name}")
+        #save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, INTER_IMAGE_DIR / f"sampled_{Path(image.filename).name}")
 
 
         # Block preparation/splitting (8x8)
         splitter = BlockSplitter(8)
-        splitter.split_channel(Y)
-        splitter.split_channel(Cb)
-        splitter.split_channel(Cr)
+        np.set_printoptions(threshold=sys.maxsize)
+        Y_blocks, Cb_blocks, Cr_blocks = splitter.split_all_channels(Y, Cb, Cr)
+        print(Y_blocks.shape)
 
-        
+
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
         # Direct Cosine Transform (DCT)
         # Quantization (quantization table/matrix!)
