@@ -71,10 +71,10 @@ def show_blocks(blocks, output_file, min, max, title):
 
     for i in range(num_vertical):
         for j in range(num_horizontal):
-            # Use vmin/vmax to scale all blocks across 0-255 (lowest value of all --> map
-            # to 0, highest value of all -> map to white), everything else in relation!
-            # IF THIS IS OMITTED: The 0-255 scale will be applied for EACH BLOCK -->
-            # contrast seems extremely high, as 0/255 is assigned to the lowest/highest value
+            # Use vmin/vmax to scale all blocks across min-max (0,255 before shift, -128,127 after level shift)
+            # (lowest value of all --> map to black, highest value of all -> map to white), everything else in relation!
+            # IF THIS IS OMITTED: The min-max scale will be applied for EACH BLOCK -->
+            # contrast seems extremely high, as min/max is assigned to the lowest/highest value
             # PER BLOCK!
             axes[i, j].imshow(blocks[i, j], cmap="gray", vmin=min, vmax=max)
             axes[i, j].axis("off")
