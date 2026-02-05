@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
         shifter = LevelShifter(128)
-        shifter.shift(Y_blocks, Cb_blocks, Cr_blocks)
+        Y_blocks, Cb_blocks, Cr_blocks = shifter.shift(Y_blocks, Cb_blocks, Cr_blocks)
         # Direct Cosine Transform (DCT)
         # Quantization (quantization table/matrix!)
         # Zigzag scan/ordering
