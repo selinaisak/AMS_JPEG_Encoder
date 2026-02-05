@@ -11,6 +11,7 @@ from BlockSplitter import BlockSplitter
 from LevelShifter import LevelShifter
 from DiscreteCosineTransformer import DCT_2D, IDCT_2D
 from Quantizer import Quantizer
+from ZigZagScanner import ZigZagScanner
 from Helper import show_blocks, save_subsample_plot, get_images, save_image
 
 # This is a basic JPEG encoder
@@ -100,6 +101,9 @@ if __name__ == '__main__':
                     "Cr Blocks after Quantization")
 
         # Zigzag scan/ordering
+        scanner = ZigZagScanner()
+        scanner.zigzag_all_blocks(Y_blocks, Cb_blocks, Cr_blocks)
+
         # Differential encoding (DC)
         # Run-length Encoding (AC)
         # Huffman Encoding (Huffman tables!)
