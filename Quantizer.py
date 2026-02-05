@@ -12,7 +12,7 @@ L = np.array([
     [24, 35, 55, 64, 81, 104, 113, 92],
     [49, 64, 78, 87, 103, 121, 120, 101],
     [72, 92, 95, 98, 112, 100, 103, 99]
-], dtype=np.float32)
+], dtype=np.int32)
 
 C = np.array([
     [17, 18, 24, 47, 99, 99, 99, 99],
@@ -23,7 +23,7 @@ C = np.array([
     [99, 99, 99, 99, 99, 99, 99, 99],
     [99, 99, 99, 99, 99, 99, 99, 99],
     [99, 99, 99, 99, 99, 99, 99, 99]
-], dtype=np.float32)
+], dtype=np.int32)
 
 class Quantizer:
     def __init__(self, q_factor):
@@ -34,6 +34,7 @@ class Quantizer:
 
     # Quantize all blocks using scaling of quantization tables + q_factor
     def quantize_blocks(self, Y_blocks, Cb_blocks, Cr_blocks):
+
         luma_h, luma_w, _, _ = Y_blocks.shape
 
         for i in range(luma_h):
@@ -50,10 +51,10 @@ class Quantizer:
         print("Q_Cr: ", Cr_blocks)
         return Y_blocks, Cb_blocks, Cr_blocks
 
-    # Scale the tables according to the quality factor
+    # Scale the tables according to the quality factor --> return integer array
     def __quantize_block(self, block, table):
         scaled_table = self.__scale_table(table)
-        return np.round(block/scaled_table)
+        return np.round(block/scaled_table).astype(dtype=np.int32)
 
     # Calculate scaled tables according to quality factor
     def __scale_table(self, table):
