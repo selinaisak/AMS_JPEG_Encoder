@@ -8,6 +8,7 @@ import numpy as np
 from ChromaSubsampler import ChromaSubsampler
 from ColorSpaceConverter import ColorSpaceConverter
 from BlockSplitter import BlockSplitter
+from Helper import show_blocks, save_subsample_plot, get_images, save_image
 
 # This is a basic JPEG encoder
 
@@ -15,92 +16,10 @@ SRC_IMAGE_DIR = Path('./pre_jpeg')
 INTER_IMAGE_DIR = Path('./intermediate')
 OUT_IMAGE_DIR = Path('./post_jpeg')
 
-
-def show_blocks(blocks, output_file, title):
-    n_v, n_h, b_h, b_w = blocks.shape
-    fig, axes = plt.subplots(n_v, n_h, figsize=(n_h, n_v))
-
-    for i in range(n_v):
-        for j in range(n_h):
-            # Use vmin/vmax to scale all blocks across 0-255 (lowest value of all --> map
-            # to 0, highest value of all -> map to white, everything else in relation!
-            # IF THIS IS OMITTED: The 0-255 scale will be applied for EACH BLOCK -->
-            # contrast seems extremely high, as 0/255 is assigned to the lowest/highest value
-            # PER BLOCK!
-            axes[i, j].imshow(blocks[i, j], cmap="gray", vmin=0, vmax=255)
-            axes[i, j].axis("off")
-
-    plt.suptitle(title)
-    plt.tight_layout()
-    plt.savefig(output_file)
-    plt.close()
-    print(f"Saved blocking preview to '{output_file}'")
-
-
-def save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, output_file):
-    """
-    Saves a matplotlib figure showing Y, subsampled Cb/Cr, upsampled Cb/Cr
-    """
-    fig, axes = plt.subplots(2, 3, figsize=(15, 8))
-
-    axes[0, 0].imshow(Y, cmap="gray")
-    axes[0, 0].set_title("Y (Luma)")
-    axes[0, 0].axis("off")
-
-    axes[0, 1].imshow(Cb, cmap="gray")
-    axes[0, 1].set_title("Cb (Subsampled)")
-    axes[0, 1].axis("off")
-
-    axes[0, 2].imshow(Cr, cmap="gray")
-    axes[0, 2].set_title("Cr (Subsampled)")
-    axes[0, 2].axis("off")
-
-    axes[1, 0].imshow(Y, cmap="gray")
-    axes[1, 0].set_title("Y (Luma)")
-    axes[1, 0].axis("off")
-
-    axes[1, 1].imshow(Cb_up, cmap="gray")
-    axes[1, 1].set_title("Cb (Upsampled)")
-    axes[1, 1].axis("off")
-
-    axes[1, 2].imshow(Cr_up, cmap="gray")
-    axes[1, 2].set_title("Cr (Upsampled)")
-    axes[1, 2].axis("off")
-
-    plt.tight_layout()
-    plt.savefig(output_file)
-    plt.close()
-    print(f"Saved subsampling preview to '{output_file}'")
-
-# Fetch all images for JPEG encoding
-def get_images():
-    images = []
-    for filename in SRC_IMAGE_DIR.iterdir():
-        # Skip iteration if it is not a 'regular' file
-        if not filename.is_file():
-            continue
-        # Else treat as image
-        try:
-            # Check if image --> only then append to list
-            with Image.open(filename) as image:
-                image.verify()
-                print(f"opened image {image.filename}")
-                images.append(Image.open(filename) )
-
-        # Print error if not image or other problem
-        except (UnidentifiedImageError, FileNotFoundError) as e:
-            print(e)
-    return images
-
-# Save the resulting image at path
-def save_image(image: Image.Image, path: Path):
-    image.save(path)
-
-
 ###### GENERAL STEPS OF A JPEG ENCODER ######
 if __name__ == '__main__':
     # Fetch all images
-    images = get_images()
+    images = get_images(SRC_IMAGE_DIR)
 
     for image in images:
         # Color space conversion RGB --> YCbCr
@@ -129,7 +48,7 @@ if __name__ == '__main__':
         back_converter = ColorSpaceConverter('YCbCr', 'RGB')
         img = back_converter.convert(img)
         img.save(INTER_IMAGE_DIR / f"subsampled_{Path(image.filename).name}")
-        #save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, INTER_IMAGE_DIR / f"sampled_{Path(image.filename).name}")
+        save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, INTER_IMAGE_DIR / f"sampled_{Path(image.filename).name}")
 
 
         # Block preparation/splitting (8x8)
