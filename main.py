@@ -21,6 +21,9 @@ OUT_IMAGE_DIR = Path('./post_jpeg')
 
 ###### GENERAL STEPS OF A JPEG ENCODER ######
 if __name__ == '__main__':
+    # Use this for debugging/viewing purposes
+    np.set_printoptions(threshold=sys.maxsize)
+
     # Fetch all images
     images = get_images(SRC_IMAGE_DIR)
 
@@ -56,7 +59,6 @@ if __name__ == '__main__':
 
         # Block preparation/splitting (8x8)
         splitter = BlockSplitter(8)
-        np.set_printoptions(threshold=sys.maxsize)
         Y_blocks, Cb_blocks, Cr_blocks = splitter.split_all_channels(Y, Cb, Cr)
         print(Y_blocks.shape)
         print(Cb_blocks.shape)

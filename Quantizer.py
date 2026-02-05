@@ -45,7 +45,9 @@ class Quantizer:
             for j in range(chroma_w):
                 Cb_blocks[i, j] = self.__quantize_block(Cb_blocks[i, j], C)
                 Cr_blocks[i, j] = self.__quantize_block(Cr_blocks[i, j], C)
-
+        print("Q_V: ", Y_blocks)
+        print("Q_Cb: ", Cb_blocks)
+        print("Q_Cr: ", Cr_blocks)
         return Y_blocks, Cb_blocks, Cr_blocks
 
     # Scale the tables according to the quality factor
