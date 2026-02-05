@@ -65,7 +65,7 @@ def save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, output_file):
     print(f"Saved subsampling preview to '{output_file}'")
 
 # Saves (a portion of) blocks and displays them in a figure
-def show_blocks(blocks, output_file, title):
+def show_blocks(blocks, output_file, min, max, title):
     num_vertical, num_horizontal, block_height, block_width = blocks.shape
     fig, axes = plt.subplots(num_vertical, num_horizontal, figsize=(num_horizontal, num_vertical))
 
@@ -76,7 +76,7 @@ def show_blocks(blocks, output_file, title):
             # IF THIS IS OMITTED: The 0-255 scale will be applied for EACH BLOCK -->
             # contrast seems extremely high, as 0/255 is assigned to the lowest/highest value
             # PER BLOCK!
-            axes[i, j].imshow(blocks[i, j], cmap="gray", vmin=0, vmax=255)
+            axes[i, j].imshow(blocks[i, j], cmap="gray", vmin=min, vmax=max)
             axes[i, j].axis("off")
 
     plt.suptitle(title)
