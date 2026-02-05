@@ -4,34 +4,34 @@ from PIL import Image
 # Use this class for chroma subsampling
 class ChromaSubsampler:
     # Expects an YCbCr image
-    # Y: Luma subsampling factor
+    # L: Luma subsampling factor
     # Ch: Horizontal chroma sampling factor
     # Cv: Vertical chroma sampling factor
 
-    def __init__(self, image: Image.Image, Y: int, Ch: int, Cv: int):
+    def __init__(self, image: Image.Image, L: int, Ch: int, Cv: int):
         # Check for color space
         if(image.mode != "YCbCr"):
             raise ValueError(f"Expected image in YCbCr mode, got {image.mode}")
 
         # Check for valid subsampling values
-        if ((Y, Ch, Cv) not in [(4, 4, 4), (4, 2, 2), (4, 2, 0)]):
+        if ((L, Ch, Cv) not in [(4, 4, 4), (4, 2, 2), (4, 2, 0)]):
             raise ValueError(f"Chroma subsampling can be 4:4:4, 4:2:2, or 4:2:0 for YCbCr")
 
         # If no errors occurred, initialize
         self.image = image
-        self.Y, self.Ch, self.Cv = Y, Ch, Cv
+        self.L, self.Ch, self.Cv = L, Ch, Cv
 
 
     def subsample(self):
         Y, Cb, Cr = self.__convert_channels_to_arrays()
 
         # 4:4:4 → no chroma subsampling at all
-        if (self.Y, self.Ch, self.Cv) == (4, 4, 4):
+        if (self.L, self.Ch, self.Cv) == (4, 4, 4):
             print(f"Y: {Y.shape}, Cb: {Cb.shape}, Cr: {Cr.shape}")
             return Y, Cb, Cr
 
         # 4:2:2 → reduce columns by half
-        if(self.Y, self.Ch, self.Cv) == (4, 2, 2):
+        if(self.L, self.Ch, self.Cv) == (4, 2, 2):
             # keep each row, but only every 2nd column
             #Cb = Cb[:, ::2]
             #Cr = Cr[:, ::2]
@@ -40,7 +40,7 @@ class ChromaSubsampler:
             Cr = self.__subsample_422(Cr)
 
         # 4:2:0 → reduce columns AND rows by half
-        if(self.Y, self.Ch, self.Cv) == (4, 2, 0):
+        if(self.L, self.Ch, self.Cv) == (4, 2, 0):
             # keep only every 2nd row AND only every 2nd column
             #Cb = Cb[::2, ::2]
             #Cr = Cr[::2, ::2]
@@ -51,7 +51,20 @@ class ChromaSubsampler:
         print(f"Y: {Y.shape}, Cb: {Cb.shape}, Cr: {Cr.shape}")
         return Y, Cb, Cr
 
+    def upsample(self, Y, Cb, Cr):
+        # 4:4:4 → no chroma subsampling at all
+        if (self.L, self.Ch, self.Cv) == (4, 4, 4):
+            print(f"Y: {Y.shape}, Cb: {Cb.shape}, Cr: {Cr.shape}")
+            return Y, Cb, Cr
+        if (self.L, self.Ch, self.Cv) == (4, 2, 2):
+            Cb = self.__upsample_422(Cb, Y.shape)
+            Cr = self.__upsample_422(Cr, Y.shape)
 
+        if (self.L, self.Ch, self.Cv) == (4, 2, 0):
+            Cb = self.__upsample_420(Cb, Y.shape)
+            Cr = self.__upsample_420(Cr, Y.shape)
+
+        return Y, Cb, Cr
 
     # Use this 'private' method for converting color channels to arrays
     # --> easier to use/manipulate further
@@ -94,3 +107,32 @@ class ChromaSubsampler:
         # average along axis 1 (horizontal grouping) and 3 (vertical grouping) --> in total
         # average across 2 x 2 block
         return channel.mean(axis=(1, 3)).astype(np.uint8)
+
+
+    def __upsample_422(self, channel, target_shape):
+        h, w = target_shape
+        return channel.repeat(2, axis=0)[:h, :w]
+
+    def __upsample_420(self, channel, target_shape):
+        h, w = target_shape
+        upsampled = channel.repeat(2, axis=0).repeat(2, axis=1)[:h, :w]
+        if(target_shape == upsampled.shape):
+            return upsampled
+        return self.__pad(upsampled, target_shape)
+
+    def __pad(self, channel, target_shape):
+        h, w = target_shape
+        out = np.zeros(target_shape, dtype=channel.dtype)
+        out[:channel.shape[0], :channel.shape[1]] = channel
+
+        # Repeat last row if needed
+        if channel.shape[0] < h:
+            print("OUT: ", out.shape)
+            print("CHANNEL: ", channel.shape)
+            out[channel.shape[0]:, :channel.shape[1]] = channel[-1:, :]
+
+        # Repeat last column if needed
+        if channel.shape[1] < w:
+            out[:, channel.shape[1]:] = out[:, channel.shape[1] - 1:channel.shape[1]]
+
+        return out
