@@ -10,6 +10,7 @@ from ColorSpaceConverter import ColorSpaceConverter
 from BlockSplitter import BlockSplitter
 from LevelShifter import LevelShifter
 from DiscreteCosineTransformer import DCT_2D, IDCT_2D
+from Quantizer import Quantizer
 from Helper import show_blocks, save_subsample_plot, get_images, save_image
 
 # This is a basic JPEG encoder
@@ -87,6 +88,15 @@ if __name__ == '__main__':
                     "Cr Blocks after IDCT", -128, 127)
 
         # Quantization (quantization table/matrix!)
+        quantizer = Quantizer(50) # use base quality factor of 50
+        Y_blocks, Cb_blocks, Cr_blocks = quantizer.quantize_blocks(Y_blocks, Cb_blocks, Cr_blocks)
+        show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / "quantization" / f"Y_{Path(image.filename).name}",
+                    "Y Blocks after Quantization")
+        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / "quantization" / f"Cb_{Path(image.filename).name}",
+                    "Cb Blocks after Quantization")
+        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / "quantization" / f"Cr_{Path(image.filename).name}",
+                    "Cr Blocks after Quantization")
+
         # Zigzag scan/ordering
         # Differential encoding (DC)
         # Run-length Encoding (AC)
