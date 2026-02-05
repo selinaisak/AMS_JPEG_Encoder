@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 from ChromaSubsampler import ChromaSubsampler
 from ColorSpaceConverter import ColorSpaceConverter
+from BlockSplitter import BlockSplitter
 
 # This is a basic JPEG encoder
 
@@ -107,6 +108,12 @@ if __name__ == '__main__':
 
 
         # Block preparation/splitting (8x8)
+        splitter = BlockSplitter(8)
+        splitter.split_channel(Y)
+        splitter.split_channel(Cb)
+        splitter.split_channel(Cr)
+
+        
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
         # Direct Cosine Transform (DCT)
         # Quantization (quantization table/matrix!)
