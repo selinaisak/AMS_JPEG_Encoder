@@ -65,7 +65,7 @@ def save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, output_file):
     print(f"Saved subsampling preview to '{output_file}'")
 
 # Saves (a portion of) blocks and displays them in a figure
-def show_blocks(blocks, output_file, min, max, title):
+def show_blocks(blocks, output_file, title, min=None, max=None):
     num_vertical, num_horizontal, block_height, block_width = blocks.shape
     fig, axes = plt.subplots(num_vertical, num_horizontal, figsize=(num_horizontal, num_vertical))
 
