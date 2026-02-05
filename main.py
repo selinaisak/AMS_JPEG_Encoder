@@ -66,6 +66,9 @@ if __name__ == '__main__':
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
         shifter = LevelShifter(128)
         Y_blocks, Cb_blocks, Cr_blocks = shifter.shift(Y_blocks, Cb_blocks, Cr_blocks)
+        show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / f"sh_blocked_Y_{Path(image.filename).name}", "Y Blocks Shifted")
+        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / f"sh_blocked_Cb_{Path(image.filename).name}", "Cb Blocks Shifted")
+        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / f"sh_blocked_Cr_{Path(image.filename).name}", "Cr Blocks Shifted")
         # Direct Cosine Transform (DCT)
         # Quantization (quantization table/matrix!)
         # Zigzag scan/ordering
