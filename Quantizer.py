@@ -32,11 +32,7 @@ class Quantizer:
             raise ValueError("Quantizer factor must be between 1 and 100")
         self.q_factor = q_factor
 
-    # Scale the tables according to the quality factor
-    def __quantize_block(self, block, table):
-        scaled_table = self.__scale_table(table)
-        return np.round(block/scaled_table)
-
+    # Quantize all blocks using scaling of quantization tables + q_factor
     def quantize_blocks(self, Y_blocks, Cb_blocks, Cr_blocks):
         luma_h, luma_w, _, _ = Y_blocks.shape
 
@@ -51,6 +47,11 @@ class Quantizer:
                 Cr_blocks[i, j] = self.__quantize_block(Cr_blocks[i, j], C)
 
         return Y_blocks, Cb_blocks, Cr_blocks
+
+    # Scale the tables according to the quality factor
+    def __quantize_block(self, block, table):
+        scaled_table = self.__scale_table(table)
+        return np.round(block/scaled_table)
 
     # Calculate scaled tables according to quality factor
     def __scale_table(self, table):
