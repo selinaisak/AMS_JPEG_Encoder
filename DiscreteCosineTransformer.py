@@ -1,6 +1,8 @@
 from scipy.fftpack import dct, idct
 import numpy as np
 
+# Source: https://stackoverflow.com/questions/7110899/how-do-i-apply-a-dct-to-an-image-in-python
+
 def DCT_2D(Y_blocks, Cb_blocks, Cr_blocks):
     Y_blocks = Y_blocks.astype(np.float32)
     Cb_blocks = Cb_blocks.astype(np.float32)
