@@ -8,6 +8,7 @@ import numpy as np
 from ChromaSubsampler import ChromaSubsampler
 from ColorSpaceConverter import ColorSpaceConverter
 from BlockSplitter import BlockSplitter
+from LevelShifter import LevelShifter
 from Helper import show_blocks, save_subsample_plot, get_images, save_image
 
 # This is a basic JPEG encoder
@@ -62,10 +63,9 @@ if __name__ == '__main__':
         show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / f"blocked_Cb_{Path(image.filename).name}", "Cb Blocks")
         show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / f"blocked_Cr_{Path(image.filename).name}", "Cr Blocks")
 
-
-
-
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
+        shifter = LevelShifter(128)
+        shifter.shift(Y_blocks, Cb_blocks, Cr_blocks)
         # Direct Cosine Transform (DCT)
         # Quantization (quantization table/matrix!)
         # Zigzag scan/ordering
