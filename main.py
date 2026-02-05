@@ -74,6 +74,9 @@ if __name__ == '__main__':
         # Discrete Cosine Transform (DCT)
         Y_blocks, Cb_blocks, Cr_blocks = DCT_2D(Y_blocks, Cb_blocks, Cr_blocks)
         show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / f"dct_blocked_Y_{Path(image.filename).name}", "Y Blocks after DCT")
+        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / f"dct_blocked_Cb_{Path(image.filename).name}", "Cb Blocks after DCT")
+        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / f"dct_blocked_Cr_{Path(image.filename).name}", "Cr Blocks after DCT")
+
         # Quantization (quantization table/matrix!)
         # Zigzag scan/ordering
         # Differential encoding (DC)
