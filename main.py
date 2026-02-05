@@ -9,7 +9,7 @@ from ChromaSubsampler import ChromaSubsampler
 from ColorSpaceConverter import ColorSpaceConverter
 from BlockSplitter import BlockSplitter
 from LevelShifter import LevelShifter
-from DiscreteCosineTransformer import DCT_2D
+from DiscreteCosineTransformer import DCT_2D, IDCT_2D
 from Helper import show_blocks, save_subsample_plot, get_images, save_image
 
 # This is a basic JPEG encoder
@@ -76,6 +76,15 @@ if __name__ == '__main__':
         show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / "dct" / f"Y_{Path(image.filename).name}", "Y Blocks after DCT")
         show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / "dct" / f"Cb_{Path(image.filename).name}", "Cb Blocks after DCT")
         show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / "dct" / f"Cr_{Path(image.filename).name}", "Cr Blocks after DCT")
+
+        # Inverse Discrete Cosine Transform (DCT) ONLY FOR VERIFICATION PURPOSES!!!
+        I_Y_blocks, I_Cb_blocks, I_Cr_blocks = IDCT_2D(Y_blocks, Cb_blocks, Cr_blocks)
+        show_blocks(I_Y_blocks[:10, :10], INTER_IMAGE_DIR / "idct" / f"Y_{Path(image.filename).name}",
+                    "Y Blocks after IDCT", -128, 127)
+        show_blocks(I_Cb_blocks[:10, :10], INTER_IMAGE_DIR / "idct" / f"Cb_{Path(image.filename).name}",
+                    "Cb Blocks after IDCT", -128, 127)
+        show_blocks(I_Cr_blocks[:10, :10], INTER_IMAGE_DIR / "idct" / f"Cr_{Path(image.filename).name}",
+                    "Cr Blocks after IDCT", -128, 127)
 
         # Quantization (quantization table/matrix!)
         # Zigzag scan/ordering
