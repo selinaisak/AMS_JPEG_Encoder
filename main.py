@@ -15,6 +15,23 @@ SRC_IMAGE_DIR = Path('./pre_jpeg')
 INTER_IMAGE_DIR = Path('./intermediate')
 OUT_IMAGE_DIR = Path('./post_jpeg')
 
+
+def show_blocks(blocks, output_file, title):
+    n_v, n_h, b_h, b_w = blocks.shape
+    fig, axes = plt.subplots(n_v, n_h, figsize=(n_h, n_v))
+
+    for i in range(n_v):
+        for j in range(n_h):
+            axes[i, j].imshow(blocks[i, j], cmap="gray")
+            axes[i, j].axis("off")
+
+    plt.suptitle(title)
+    plt.tight_layout()
+    plt.savefig(output_file)
+    plt.close()
+    print(f"Saved blocking preview to '{output_file}'")
+
+
 def save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, output_file):
     """
     Saves a matplotlib figure showing Y, subsampled Cb/Cr, upsampled Cb/Cr
@@ -115,6 +132,13 @@ if __name__ == '__main__':
         np.set_printoptions(threshold=sys.maxsize)
         Y_blocks, Cb_blocks, Cr_blocks = splitter.split_all_channels(Y, Cb, Cr)
         print(Y_blocks.shape)
+        print(Cb_blocks.shape)
+        print(Cr_blocks.shape)
+        show_blocks(Y_blocks[:10, :10], INTER_IMAGE_DIR / f"blocked_Y_{Path(image.filename).name}", "Y Blocks")
+        show_blocks(Cb_blocks[:10, :10], INTER_IMAGE_DIR / f"blocked_Cb_{Path(image.filename).name}", "Cb Blocks")
+        show_blocks(Cr_blocks[:10, :10], INTER_IMAGE_DIR / f"blocked_Cr_{Path(image.filename).name}", "Cr Blocks")
+
+
 
 
         # Shift pixel value range [0, 255] → [-128, 127] (for DCT)
