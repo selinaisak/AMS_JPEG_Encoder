@@ -1,3 +1,5 @@
+import numpy as np
+
 class ZigZagScanner:
     def zigzag_all_blocks(self, Y_blocks, Cb_blocks, Cr_blocks):
         for channel_blocks in (Y_blocks, Cb_blocks, Cr_blocks):
@@ -5,11 +7,39 @@ class ZigZagScanner:
                 for block in blocks:
                     self.__zigzag_block(block)
 
+    # Perform the zigzag scan: Go up, if the diagonal has an even index, and
+    # go down, if it has an odd index --> keep direction changes in mind at all times!
     def __zigzag_block(self, block):
+
         if(block.shape[0] != block.shape[1]):
             raise ValueError(f"Block size is not square! {block.shape}")
 
         block_size = block.shape[0]
-        print("Block_size: ", block_size)
+        scan = []
+        # The number of diagonals is block_size * 2 - 1 --> for 8x8 blocks = 15
+        num_diagonals = 2 * block_size - 1
+        # Iterate over diagonals 0 to 14 and keep their direction in mind!
+        for diagonal in range(num_diagonals):
+            if(diagonal % 2 == 0):
+                # even diagonals go bottom-up
+                for i in range(diagonal + 1):
+                    j = diagonal - i
+                    if i < block_size and j < block_size:
+                        # traverse from bottom-left to top-right --> swap indices!
+                        # the bigger i(column) --> the smaller j(row) --> approaching top-right-corner
+                        scan.append(block[j, i])
+                        print(f"EVEN i={j}, j={i}")
+            else:
+                # odd diagonals go top-down
+                for i in range(diagonal + 1):
+                    j = diagonal - i
+                    if i < block_size and j < block_size:
+                        # traverse from top-right to bottom-left --> keep indices in order!
+                        # the bigger i(row) --> the smaller j(column) --> approaching bottom-left-corner
+                        scan.append(block[i, j])
+                        print(f"ODD i={i}, j={j}")
+
+        print(f"Block: {block.shape}, Scan: {len(scan)}")
+        return scan
 
 
