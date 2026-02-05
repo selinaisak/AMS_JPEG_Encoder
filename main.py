@@ -22,7 +22,12 @@ def show_blocks(blocks, output_file, title):
 
     for i in range(n_v):
         for j in range(n_h):
-            axes[i, j].imshow(blocks[i, j], cmap="gray")
+            # Use vmin/vmax to scale all blocks across 0-255 (lowest value of all --> map
+            # to 0, highest value of all -> map to white, everything else in relation!
+            # IF THIS IS OMITTED: The 0-255 scale will be applied for EACH BLOCK -->
+            # contrast seems extremely high, as 0/255 is assigned to the lowest/highest value
+            # PER BLOCK!
+            axes[i, j].imshow(blocks[i, j], cmap="gray", vmin=0, vmax=255)
             axes[i, j].axis("off")
 
     plt.suptitle(title)
@@ -63,7 +68,7 @@ def save_subsample_plot(Y, Cb, Cr, Cb_up, Cr_up, output_file):
     axes[1, 2].axis("off")
 
     plt.tight_layout()
-    plt.savefig(output_file, dpi=150)
+    plt.savefig(output_file)
     plt.close()
     print(f"Saved subsampling preview to '{output_file}'")
 
