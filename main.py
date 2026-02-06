@@ -13,6 +13,7 @@ from DiscreteCosineTransformer import DCT_2D, IDCT_2D
 from Quantizer import Quantizer
 from ZigZagScanner import ZigZagScanner
 from DifferentialEncoder import DifferentialEncoder
+from RunLengthEncoder import RunLengthEncoder
 from Helper import show_blocks, save_subsample_plot, get_images, save_image
 
 # This is a basic JPEG encoder
@@ -111,6 +112,8 @@ if __name__ == '__main__':
         Y_diff, Cb_diff, Cr_diff = diff_encoder.differential_encode(Y_scan, Cb_scan, Cr_scan)
 
         # Run-length Encoding (AC)
+        rl_encoder = RunLengthEncoder()
+        Y_rle, Cb_rle, Cr_rle = rl_encoder.rl_encode(Y_diff, Cb_diff, Cr_diff)
         # Huffman Encoding (Huffman tables!)
         # Frame builder --> construct/display JPEG encoded image!
 

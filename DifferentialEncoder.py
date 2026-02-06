@@ -1,4 +1,5 @@
 class DifferentialEncoder:
+
     # Perform differential coding on DC coefficients of zigzag scanned blocks.
     # Each block’s DC coefficient is replaced by the difference from the previous block.
     def differential_encode(self, Y_scan, Cb_scan, Cr_scan):
