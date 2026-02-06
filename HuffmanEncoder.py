@@ -74,3 +74,26 @@ class HuffmanEncoder:
         self.ac_table = self.__build_table(ac_symbols)
         print(f"DC Table: {self.dc_table}")
         print(f"AC Table: {self.ac_table}")
+
+    # Encode individual blocks  --> treat
+    # AC and DC components separately -->
+    # Now we need the encoded bits from the previously generated Huffman tables!
+    def encode_bitstream(self, blocks):
+        bitstream = ""
+
+        for block in blocks:
+            size, bits = block['DC']
+            bitstream += self.dc_table[size]
+            bitstream += bits
+
+            for ac in block['AC']:
+                if ac == ('ZRL') or ac == ('EOB'):
+                    bitstream += self.ac_table[ac]
+                else:
+                    (run, size), bits = ac
+                    bitstream += self.ac_table[(run, size)]
+                    bitstream += bits
+
+        print(f"Bitstream: {bitstream}")
+        return bitstream
+
