@@ -12,6 +12,7 @@ from LevelShifter import LevelShifter
 from DiscreteCosineTransformer import DCT_2D, IDCT_2D
 from Quantizer import Quantizer
 from ZigZagScanner import ZigZagScanner
+from DifferentialEncoder import DifferentialEncoder
 from Helper import show_blocks, save_subsample_plot, get_images, save_image
 
 # This is a basic JPEG encoder
@@ -106,6 +107,9 @@ if __name__ == '__main__':
         print(f"AFTER ZIGZAG: Y: {Y_scan}, Cb: {Cb_scan}, Cr: {Cr_scan}")
 
         # Differential encoding (DC)
+        diff_encoder = DifferentialEncoder()
+        Y_diff, Cb_diff, Cr_diff = diff_encoder.differential_encode(Y_scan, Cb_scan, Cr_scan)
+
         # Run-length Encoding (AC)
         # Huffman Encoding (Huffman tables!)
         # Frame builder --> construct/display JPEG encoded image!
