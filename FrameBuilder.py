@@ -1,0 +1,2 @@
+class FrameBuilder:
+    pass
