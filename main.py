@@ -8,7 +8,6 @@ import numpy as np
 from ChromaSubsampler import ChromaSubsampler
 from ColorSpaceConverter import ColorSpaceConverter
 from BlockSplitter import BlockSplitter
-from HuffmanEncoder import HuffmanEncoder
 from LevelShifter import LevelShifter
 from DiscreteCosineTransformer import DCT_2D, IDCT_2D
 from Quantizer import Quantizer
@@ -129,7 +128,9 @@ if __name__ == '__main__':
         Cb_tables = huffman_encoder.build_tables(Cb_sym)
         Cr_tables = huffman_encoder.build_tables(Cr_sym)
 
-        huffman_encoder.encode_bitstream(Y_sym, Y_tables)
+        Y_bits = huffman_encoder.encode_bitstream(Y_sym, Y_tables)
+        Cb_bits = huffman_encoder.encode_bitstream(Cb_sym, Cb_tables)
+        Cr_bits = huffman_encoder.encode_bitstream(Cr_sym, Cr_tables)
 
         # Frame builder --> construct/display JPEG encoded image!
 
