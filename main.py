@@ -125,8 +125,11 @@ if __name__ == '__main__':
 
         # Huffman Encoding (Huffman tables!)
         huffman_encoder = HuffmanEncoder()
-        huffman_encoder.build_tables(Y_sym)
-        huffman_encoder.encode_bitstream(Y_sym)
+        Y_tables = huffman_encoder.build_tables(Y_sym)
+        Cb_tables = huffman_encoder.build_tables(Cb_sym)
+        Cr_tables = huffman_encoder.build_tables(Cr_sym)
+
+        huffman_encoder.encode_bitstream(Y_sym, Y_tables)
 
         # Frame builder --> construct/display JPEG encoded image!
 

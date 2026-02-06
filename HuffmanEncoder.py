@@ -2,10 +2,6 @@ from collections import Counter
 import heapq
 
 class HuffmanEncoder:
-    def __init__(self):
-        # Store separate tables for DC/AC symbols
-        self.dc_table = {}
-        self.ac_table = {}
 
     # Build a Huffman table for a list of symbols
     # --> Symbols can be AC or DC
@@ -70,28 +66,31 @@ class HuffmanEncoder:
                     (run, size), _ = ac
                     ac_symbols.append((run, size))
 
-        self.dc_table = self.__build_table(dc_symbols)
-        self.ac_table = self.__build_table(ac_symbols)
-        print(f"DC Table: {self.dc_table}")
-        print(f"AC Table: {self.ac_table}")
+        dc_table = self.__build_table(dc_symbols)
+        ac_table = self.__build_table(ac_symbols)
+        print(f"DC Table: {dc_table}")
+        print(f"AC Table: {ac_table}")
+        return { "DC": dc_table, "AC": ac_table }
 
     # Encode individual blocks  --> treat
     # AC and DC components separately -->
     # Now we need the encoded bits from the previously generated Huffman tables!
-    def encode_bitstream(self, blocks):
+    def encode_bitstream(self, blocks, tables):
         bitstream = ""
+        dc_table = tables['DC']
+        ac_table = tables['AC']
 
         for block in blocks:
             size, bits = block['DC']
-            bitstream += self.dc_table[size]
+            bitstream += dc_table[size]
             bitstream += bits
 
             for ac in block['AC']:
                 if ac == ('ZRL') or ac == ('EOB'):
-                    bitstream += self.ac_table[ac]
+                    bitstream += ac_table[ac]
                 else:
                     (run, size), bits = ac
-                    bitstream += self.ac_table[(run, size)]
+                    bitstream += ac_table[(run, size)]
                     bitstream += bits
 
         print(f"Bitstream: {bitstream}")
