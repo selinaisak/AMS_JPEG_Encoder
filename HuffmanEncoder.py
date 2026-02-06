@@ -63,7 +63,7 @@ class HuffmanEncoder:
         if over_len:
             # Simple redistribution: move extra symbols to max length
             for symbol in over_len:
-                # Truncate code to 16 bits (leftmost bits kept)
+                # Truncate code to 16 bits (rightmost bits kept)
                 temp_table[symbol] = temp_table[symbol][-MAX_LEN:]
                 code_lengths[symbol] = MAX_LEN
 
@@ -85,9 +85,9 @@ class HuffmanEncoder:
             for ac in block['AC']:
                 #if ac == ('ZRL',) or ac == ('EOB',):
                 #    ac_symbols.append(ac)
-                if (ac == ('ZRL',)):
+                if (ac == (15,0)):
                     ac_symbols.append((15,0))
-                elif(ac == ('EOB',)):
+                elif(ac == (0,0)):
                     ac_symbols.append((0,0))
                 else:
                     (run, size), _ = ac
@@ -115,9 +115,9 @@ class HuffmanEncoder:
             for ac in block['AC']:
                 #if ac == ('ZRL',) or ac == ('EOB',):
                 #    bitstream += ac_table[ac]
-                if (ac == ('ZRL',)):
+                if (ac == (15,0)):
                     bitstream += ac_table[(15,0)]
-                elif(ac == ('EOB',)):
+                elif(ac == (0,0)):
                     bitstream += ac_table[(0,0)]
                 else:
                     (run, size), bits = ac
