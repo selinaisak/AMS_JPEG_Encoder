@@ -1,8 +1,7 @@
 import sys
 
-from PIL import Image, UnidentifiedImageError
+from PIL import Image
 from pathlib import Path
-import matplotlib.pyplot as plt
 import numpy as np
 
 from ChromaSubsampler import ChromaSubsampler
@@ -10,7 +9,7 @@ from ColorSpaceConverter import ColorSpaceConverter
 from BlockSplitter import BlockSplitter
 from LevelShifter import LevelShifter
 from DiscreteCosineTransformer import DCT_2D, IDCT_2D
-from Quantizer import Quantizer
+from Quantizer import Quantizer, L, C
 from ZigZagScanner import ZigZagScanner
 from DifferentialEncoder import DifferentialEncoder
 from RunLengthEncoder import RunLengthEncoder
@@ -26,6 +25,7 @@ OUT_IMAGE_DIR = Path('./post_jpeg')
 
 ###### GENERAL STEPS OF A JPEG ENCODER ######
 if __name__ == '__main__':
+
     # Use this for debugging/viewing purposes
     np.set_printoptions(threshold=sys.maxsize)
 
@@ -33,6 +33,7 @@ if __name__ == '__main__':
     images = get_images(SRC_IMAGE_DIR)
 
     for image in images:
+        w, h = image.size
         # Color space conversion RGB --> YCbCr
         converter = ColorSpaceConverter('RGB', 'YCbCr')
         converted = converter.convert(image)
@@ -42,6 +43,7 @@ if __name__ == '__main__':
         # Chroma subsampling (4:2:0)
         subsampler = ChromaSubsampler(converted,4,2,0)
         Y, Cb, Cr = subsampler.subsample()
+        #Y, Cb, Cr = subsampler.upsample(Y, Cb, Cr)
 
         # Test subsampling effect via upsampling
         Y_up, Cb_up, Cr_up = subsampler.upsample(Y, Cb, Cr)
@@ -137,6 +139,6 @@ if __name__ == '__main__':
         # Save image to output directory --> add appropriate extension (.jpeg)
         # --> also reuse original file name (get it via Path)
         out_path = (OUT_IMAGE_DIR / Path(image.filename).name).with_suffix(".jpg")
-        save_image(converted, out_path)
+        #save_image(converted, out_path)
 
     # See PyCharm help at https://www.jetbrains.com/help/pycharm/
