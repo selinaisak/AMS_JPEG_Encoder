@@ -134,6 +134,10 @@ if __name__ == '__main__':
         Cb_bits = huffman_encoder.encode_bitstream(Cb_sym, Cb_tables)
         Cr_bits = huffman_encoder.encode_bitstream(Cr_sym, Cr_tables)
 
+        print(f"Y_bits: {Y_bits}")
+        print(f"Cb_bits: {Cb_bits}")
+        print(f"Cr_bits: {Cr_bits}")
+
         # Frame builder --> construct/display JPEG encoded image!
 
         # Save image to output directory --> add appropriate extension (.jpeg)
