@@ -14,6 +14,7 @@ from Quantizer import Quantizer
 from ZigZagScanner import ZigZagScanner
 from DifferentialEncoder import DifferentialEncoder
 from RunLengthEncoder import RunLengthEncoder
+from SymbolEncoder import SymbolEncoder
 from Helper import show_blocks, save_subsample_plot, get_images, save_image
 
 # This is a basic JPEG encoder
@@ -114,6 +115,12 @@ if __name__ == '__main__':
         # Run-length Encoding (AC)
         rl_encoder = RunLengthEncoder()
         Y_rle, Cb_rle, Cr_rle = rl_encoder.rl_encode(Y_diff, Cb_diff, Cr_diff)
+
+        # Symbol Encoding
+        symbol_encoder = SymbolEncoder()
+        Y_sym, Cb_sym, Cr_sym = symbol_encoder.encode(Y_rle, Cb_rle, Cr_rle)
+        print(f"Y: {Y_sym}, Cb: {Cb_sym}, Cr: {Cr_sym}")
+
         # Huffman Encoding (Huffman tables!)
         # Frame builder --> construct/display JPEG encoded image!
 

@@ -36,6 +36,10 @@ class RunLengthEncoder:
             coefficient = int(coefficient)
             if coefficient == 0:
                 zero_run += 1
+                # 16 consecutive 0s --> "ZRL"
+                if(zero_run == 16):
+                    rle.append((15, 0))
+                    zero_run = 0
             else:
                 rle.append((zero_run, coefficient))
                 zero_run = 0
