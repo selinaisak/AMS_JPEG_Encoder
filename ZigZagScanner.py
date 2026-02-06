@@ -16,7 +16,7 @@ class ZigZagScanner:
                 for block in blocks:
                     channel_scan.append(self.__zigzag_block(block))
             scans.append(channel_scan)
-        print(f"AFTER ZIGZAG: Scans per channel: {[len(scan) for scan in scans]}")
+        return scans
 
     # Perform the zigzag scan: Go up, if the diagonal has an even index, and
     # go down, if it has an odd index --> keep direction changes in mind at all times!

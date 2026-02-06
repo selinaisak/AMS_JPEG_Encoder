@@ -102,7 +102,8 @@ if __name__ == '__main__':
 
         # Zigzag scan/ordering
         scanner = ZigZagScanner()
-        scanner.zigzag_all_blocks(Y_blocks, Cb_blocks, Cr_blocks)
+        Y_scan, Cb_scan, Cr_scan = scanner.zigzag_all_blocks(Y_blocks, Cb_blocks, Cr_blocks)
+        print(f"AFTER ZIGZAG: Y: {Y_scan}, Cb: {Cb_scan}, Cr: {Cr_scan}")
 
         # Differential encoding (DC)
         # Run-length Encoding (AC)
