@@ -10,7 +10,7 @@ class HuffmanEncoder:
     # Build a Huffman table for a list of symbols
     # --> Symbols can be AC or DC
     # --> return mapping of symbol to Huffman code (in a dictionary)
-    def build_table(self, symbols):
+    def __build_table(self, symbols):
 
         # Count how often each symbol appears
         # --> more frequent symbols will get shorter Huffman codes!
@@ -50,3 +50,27 @@ class HuffmanEncoder:
         # --> heap[0][1] contains [symbol, code] pairs
         # --> build dictionary from that!
         return {symbol: code for symbol, code in heap[0][1]}
+
+
+    # Construct the tables from the provided blocks
+    def build_tables(self, blocks):
+        dc_symbols = []
+        ac_symbols = []
+
+        for block in blocks:
+            # DC: size only
+            dc_size, _ = block['DC']
+            dc_symbols.append(dc_size)
+
+            # AC symbols
+            for ac in block['AC']:
+                if ac == ('ZRL') or ac == ('EOB'):
+                    ac_symbols.append(ac)
+                else:
+                    (run, size), _ = ac
+                    ac_symbols.append((run, size))
+
+        self.dc_table = self.__build_table(dc_symbols)
+        self.ac_table = self.__build_table(ac_symbols)
+        print(f"DC Table: {self.dc_table}")
+        print(f"AC Table: {self.ac_table}")

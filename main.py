@@ -8,6 +8,7 @@ import numpy as np
 from ChromaSubsampler import ChromaSubsampler
 from ColorSpaceConverter import ColorSpaceConverter
 from BlockSplitter import BlockSplitter
+from HuffmanEncoder import HuffmanEncoder
 from LevelShifter import LevelShifter
 from DiscreteCosineTransformer import DCT_2D, IDCT_2D
 from Quantizer import Quantizer
@@ -15,6 +16,7 @@ from ZigZagScanner import ZigZagScanner
 from DifferentialEncoder import DifferentialEncoder
 from RunLengthEncoder import RunLengthEncoder
 from SymbolEncoder import SymbolEncoder
+from HuffmanEncoder import HuffmanEncoder
 from Helper import show_blocks, save_subsample_plot, get_images, save_image
 
 # This is a basic JPEG encoder
@@ -122,6 +124,9 @@ if __name__ == '__main__':
         print(f"Y: {Y_sym}, Cb: {Cb_sym}, Cr: {Cr_sym}")
 
         # Huffman Encoding (Huffman tables!)
+        huffman_encoder = HuffmanEncoder()
+        huffman_encoder.build_tables(Y_sym)
+
         # Frame builder --> construct/display JPEG encoded image!
 
         # Save image to output directory --> add appropriate extension (.jpeg)

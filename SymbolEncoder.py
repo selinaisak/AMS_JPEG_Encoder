@@ -47,12 +47,12 @@ class SymbolEncoder:
 
             # End Of Block symbol (all remaining ACs are zero)
             if (run, value) == (0, 0):
-                ac_encoded.append(("EOB",))
+                ac_encoded.append(("EOB"))
                 continue
 
             # Zero Run Length symbol (16 consecutive zeros)
             if (run, value) == (15, 0):
-                ac_encoded.append(("ZRL",))
+                ac_encoded.append(("ZRL"))
                 continue
 
             # Normal AC coefficient
